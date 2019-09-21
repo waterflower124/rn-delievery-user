@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GadeliApp</string>
+    <string name="facebook_app_id">457421891475137</string>
+    <string name="fb_login_protocol_scheme">fb457421891475137</string>
+</resources>
