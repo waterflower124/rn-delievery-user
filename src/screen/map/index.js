@@ -5,6 +5,7 @@ import { TouchableOpacity,Alert, StyleSheet,ActivityIndicator,Clipboard } from '
 import MapView, { Polyline, Marker, AnimatedRegion } from 'react-native-maps';
 import call from "react-native-phone-call";
 import Dialog from "react-native-dialog";
+import { getDriverLocation } from '../../utility/firebase';
 
 const img_vehiculo =["",require("../../assets/02.png"), require("../../assets/01.png"), require("../../assets/03.png")];
 
@@ -38,19 +39,35 @@ class MapScreen extends React.Component {
       vehiculo_imagen:img_vehiculo[1],
       repartidor_image:"https://www.aveoperu.com/gadeli11/imagenes/usuarios/logo.jpg",
       cargar_imagen:true,
+      marker: {
+        latitude: -18.0095704,
+        longitude: -70.2475725
+      },
+      initialRegion: {
+        latitude: -18.0095704,
+        longitude: -70.2475725,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+      region: {
+        latitude: -18.0095704,
+        longitude: -70.2475725,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
     };
   }
-  metodosdepago(){
+  metodosdepago = () => {
     this.setState({
       dialogVisible: true,
     })
   }
-  cerrar(){
+  cerrar = () => {
     this.setState({
       dialogVisible: false,
     })
   }
-  cargar_avance(){
+  cargar_avance = () => {
     if(this.state.pedido_activo){
     const { pedido_id } = this.props.navigation.state.params;
     this.setState({pedido_id:pedido_id})
@@ -104,15 +121,16 @@ class MapScreen extends React.Component {
     }
   })
   .catch(error => {
-      console.error(error);
+      console.log(error);
     });
   }
 }
   componentDidMount() {
     this.intervalId = setInterval(() => this.cargar_avance(), 5000);
     this.cargar_avance();
+    getDriverLocation('test_driver', (obj) => this.onLocation(obj));
 }
-getInitialState() {
+getInitialState = () => {
   return {
     region: {
       latitude: -18.0095704,
@@ -122,20 +140,37 @@ getInitialState() {
     }
   };
 }
-onRegionChange(region) {
+
+onLocation = (obj) => {
+  console.warn('onLocation', JSON.stringify(obj.location));
+  // alert(JSON.stringify(obj));
+  const region = {
+    latitude: obj.location.latitude,
+    longitude: obj.location.longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421
+  };
+  const marker = {
+    latitude: obj.location.latitude,
+    longitude: obj.location.longitude,
+  };
+  this.setState({ region, marker });
+};
+
+onRegionChange = (region) => {
   // this.setState({ region });
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      const initialPosition = JSON.stringify(position);
-      this.setState({ initialPosition });
-    },
-    error => alert(error.message),
-    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-  );
-  this.watchID = navigator.geolocation.watchPosition(position => {
-    const lastPosition = JSON.stringify(position);
-    this.setState({ lastPosition });
-  });
+  // navigator.geolocation.getCurrentPosition(
+  //   position => {
+  //     const initialPosition = JSON.stringify(position);
+  //     this.setState({ initialPosition });
+  //   },
+  //   error => alert(error.message),
+  //   { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+  // );
+  // this.watchID = navigator.geolocation.watchPosition(position => {
+  //   const lastPosition = JSON.stringify(position);
+  //   this.setState({ lastPosition });
+  // });
 }
   getMapRegion = () => ({
     latitude: this.state.latitude,
@@ -144,7 +179,7 @@ onRegionChange(region) {
     longitudeDelta: -122.4324
   });
 
-  siguiente(){
+  siguiente = () => {
     Alert.alert(
       'Gadeli Delivery',
       'Concluir con el Pedido',
@@ -164,10 +199,10 @@ onRegionChange(region) {
       {cancelable: false},
     );
   }
-  onRegionChange(region) {
+  onRegionChange = (region) => {
     this.setState({ region });
   }
-  PhoneCall ()  {
+  PhoneCall = () => {
     //handler to make a call
     let phone = this.state.repartidor_telefono;
     if (phone == "" || phone == null ) {
@@ -177,7 +212,9 @@ onRegionChange(region) {
         number: phone,
         prompt: false
       };
-      call(args).catch(console.error);
+      call(args).catch((error) => {
+        console.log(error);
+      });
     }
   };
   render() {
@@ -191,12 +228,7 @@ onRegionChange(region) {
             zoomControlEnabled
             showsTraffic
             loadingEnabled
-            initialRegion={{
-              latitude: -18.0095704,
-              longitude: -70.2475725,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
-            }}
+            initialRegion={this.state.initialRegion}
             showsUserLocation={false}
             followUserLocation={false}
             zoomEnabled={true}
@@ -205,14 +237,9 @@ onRegionChange(region) {
             onRegionChange={this.onRegionChange}
           >
           <Marker
-            draggable
-            coordinate={{
-              // 37.78825,
-              //-122.4324
-              latitude: -18.0095704,
-              longitude: -70.2475725
-            }}
-            onDragEnd={e => alert(JSON.stringify(e.nativeEvent.coordinate))}
+            // draggable
+            coordinate={this.state.marker}
+            // onDragEnd={e => alert(JSON.stringify(e.nativeEvent.coordinate))}
             title={"Test Marker"}
             description={"This is a description of the marker"}
           />

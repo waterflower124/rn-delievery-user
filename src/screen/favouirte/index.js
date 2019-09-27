@@ -54,7 +54,7 @@ class Favouirte extends React.Component{
         }
       })
       .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     }
     )
@@ -85,7 +85,7 @@ class Favouirte extends React.Component{
         this.Cargar_datos();
       })
       .catch(error => {
-          console.error(error);
+          console.log(error);
         })
 
     // 

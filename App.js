@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, {Fragment} from 'react';
+import React, {Fragment, Component} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -53,6 +53,7 @@ import OrderRequest from './src/screen/order_request';
 import OrderRequestDetails from './src/screen/order_reuest_details';
 import ForgotPasswordPage from './src/screen/forgotpassword';
 import AboutPage from './src/screen/about';
+import { initialize } from './src/utility/firebase';
 
 const drawPage = createStackNavigator(
   {
@@ -227,7 +228,29 @@ const AppNavigator = createStackNavigator(
   },
 });
 
-  export default createAppContainer(AppNavigator)
+  export const App = createAppContainer(AppNavigator)
+
+
+  export default class AppRoot extends Component {
+    constructor(props) {
+      super(props)
+      this.state = {};
+    }
+    
+     componentDidMount(){
+      initialize();
+     }
+    
+      render(){
+        return (<App />);
+        // return(
+        //   <Provider store={store}>
+        //     <App />
+        //   </Provider>
+        // )
+      }
+    }
+  
 
 // const App = () => {
 //   return (

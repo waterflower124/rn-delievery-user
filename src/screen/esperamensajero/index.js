@@ -77,7 +77,7 @@ class espera extends React.Component {
           }
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     }
   }
@@ -107,7 +107,7 @@ class espera extends React.Component {
           }
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     }
   }

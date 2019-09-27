@@ -55,7 +55,7 @@ class FeedBackScreen extends React.Component{
       //}
     })
     .catch(error => {
-        console.error(error);
+        console.log(error);
       });
     
   }
@@ -89,7 +89,7 @@ class FeedBackScreen extends React.Component{
       this.props.navigation.navigate('HomePage')
    })
    .catch(error => {
-       console.error(error);
+       console.log(error);
      });
    
  }

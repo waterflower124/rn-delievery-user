@@ -49,7 +49,7 @@ ActualiarDatos(){
     }
   })
   .catch(error => {
-      console.error(error);
+      console.log(error);
     });
     */
 }
@@ -92,7 +92,7 @@ async Cargar_datos(){
       }
     })
     .catch(error => {
-        console.error(error);
+        console.log(error);
       });
   }
   )

@@ -3,6 +3,7 @@ import { StatusBar, Image, TouchableOpacity, View,FlatList, FormLabel, FormInput
 import { Container, Content, Footer ,Text, Card, CardItem, Body} from 'native-base';
 import { Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
+import {configure, removeAllListeners} from '../../utility/Geolocation'
 
 
 console.disableYellowBox = true;
@@ -15,19 +16,23 @@ class MyOrder extends React.Component{
       tipopedido:["","Comprar & Enviar","Recojer & Enviar","","Regalo"]
     };
   //}
-  async ObtenerUsuario_id() {
+  async ObtenerUsuario_id(init = false) {
     try {
       const usuario_id = await AsyncStorage.getItem('@gadeli:usuario_id');
-        return usuario_id;
+      console.log('usuario_id', usuario_id)
+      if (init) {
+        configure({ userId: 'test_user' });
+      }  
+      return usuario_id;
       }
      catch (error) {
        console.log("Error al buscar usuario_id");
      }
   };
   
-   Cargar_datos= async (avance) =>{
+   Cargar_datos= async (avance, init = false) =>{
      
-    this.ObtenerUsuario_id()
+    this.ObtenerUsuario_id(init)
     .then(user_id =>{
       this.setState({usuario_id:user_id});
      
@@ -56,7 +61,7 @@ class MyOrder extends React.Component{
         }
       })
       .catch(error => {
-          console.error(error);
+          console.log(error);
         });
       }
       )
@@ -102,8 +107,12 @@ class MyOrder extends React.Component{
    // const { entri } = this.props.navigation.state.params; 
    // this.state.setState({entri:entri})
    // if(this.state.entri){
-      this.Cargar_datos(1)
+      this.Cargar_datos(1, true)
    // }
+  }
+
+  componentWillUnmount() {
+    removeAllListeners();
   }
     render(){
       //if (this.state.refreshing) {
