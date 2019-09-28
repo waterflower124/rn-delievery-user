@@ -43,6 +43,7 @@ class MapScreen extends React.Component {
         latitude: -18.0095704,
         longitude: -70.2475725
       },
+      markers: [],
       initialRegion: {
         latitude: -18.0095704,
         longitude: -70.2475725,
@@ -142,6 +143,7 @@ getInitialState = () => {
 }
 
 onLocation = (obj) => {
+  const {markers} = this.state;
   console.warn('onLocation', JSON.stringify(obj.location));
   // alert(JSON.stringify(obj));
   const region = {
@@ -154,11 +156,16 @@ onLocation = (obj) => {
     latitude: obj.location.latitude,
     longitude: obj.location.longitude,
   };
-  this.setState({ region, marker });
+  const nMarkers = [
+    ...markers,
+    marker,
+  ];
+  // markers.push(marker);
+  this.setState({ region, marker, markers: nMarkers });
 };
 
 onRegionChange = (region) => {
-  // this.setState({ region });
+  this.setState({ region });
   // navigator.geolocation.getCurrentPosition(
   //   position => {
   //     const initialPosition = JSON.stringify(position);
@@ -199,9 +206,9 @@ onRegionChange = (region) => {
       {cancelable: false},
     );
   }
-  onRegionChange = (region) => {
-    this.setState({ region });
-  }
+  // onRegionChange = (region) => {
+  //   this.setState({ region });
+  // }
   PhoneCall = () => {
     //handler to make a call
     let phone = this.state.repartidor_telefono;
@@ -220,8 +227,7 @@ onRegionChange = (region) => {
   render() {
     
     return (
-      <Container >
-         
+      <Container>
          <MapView
             style={styles.map}
             followsUserLocation
@@ -236,6 +242,20 @@ onRegionChange = (region) => {
             region={this.state.region}
             onRegionChange={this.onRegionChange}
           >
+            <Polyline
+              // coordinates={[
+              //   { latitude: 37.8025259, longitude: -122.4351431 },
+              //   { latitude: 37.7896386, longitude: -122.421646 },
+              //   { latitude: 37.7665248, longitude: -122.4161628 },
+              //   { latitude: 37.7734153, longitude: -122.4577787 },
+              //   { latitude: 37.7948605, longitude: -122.4596065 },
+              //   { latitude: 37.8025259, longitude: -122.4351431 }
+              // ]}
+              coordinates={this.state.markers}
+              strokeColor="#F00" // fallback for when `strokeColors` is not supported by the map-provider
+              strokeColors={["#F00"]}
+              strokeWidth={6}
+            />
           <Marker
             // draggable
             coordinate={this.state.marker}
