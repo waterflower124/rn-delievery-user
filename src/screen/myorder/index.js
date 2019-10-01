@@ -21,7 +21,7 @@ class MyOrder extends React.Component{
       const usuario_id = await AsyncStorage.getItem('@gadeli:usuario_id');
       console.log('usuario_id', usuario_id)
       if (init) {
-        configure({ userId: 'test_user' });
+        // configure({ userId: 'test_user' });
       }  
       return usuario_id;
       }
@@ -109,6 +109,7 @@ class MyOrder extends React.Component{
    // if(this.state.entri){
       this.Cargar_datos(1, true)
    // }
+   configure({ userId: 'test_user' });
   }
 
   componentWillUnmount() {
